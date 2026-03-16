@@ -1,0 +1,6 @@
+@SparkFlow.Server_HostAddress = http://localhost:5126
+
+GET {{SparkFlow.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

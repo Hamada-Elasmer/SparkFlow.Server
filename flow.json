@@ -1,0 +1,8 @@
+{
+  "flowId": "daily_run",
+  "version": 1,
+  "tasks": [
+    { "type": "CollectResources", "params": { "times": 1 } },
+    { "type": "UpgradeBuilding", "params": { "building": "Castle" } }
+  ]
+}

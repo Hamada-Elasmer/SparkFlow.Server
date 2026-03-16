@@ -1,0 +1,1 @@
+namespace SparkFlow.Server.Application.Features.Workers.Heartbeat; public sealed class WorkerHeartbeatValidator { public bool Validate(WorkerHeartbeatCommand command, out string? error){ if(string.IsNullOrWhiteSpace(command.WorkerId)){ error="WorkerId is required."; return false;} error=null; return true; } }

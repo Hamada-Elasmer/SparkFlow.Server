@@ -1,0 +1,1 @@
+namespace SparkFlow.Server.Application.Features.Workers.RequestSession; public sealed class RequestSessionValidator { public bool Validate(RequestSessionCommand command, out string? error){ if(string.IsNullOrWhiteSpace(command.WorkerId)){ error="WorkerId is required."; return false;} error=null; return true;} }
