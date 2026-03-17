@@ -1,135 +1,83 @@
 # SparkFlow.Server
 
-SparkFlow.Server is a backend orchestration server built with **ASP.NET Core** and structured using **Clean Architecture** principles.  
-It is responsible for coordinating **workers**, managing **sessions**, executing **flows**, enforcing **policies**, and exposing operational **metrics**.
+SparkFlow.Server is the orchestration backend for SparkFlow workers.  
+It manages accounts, flows, sessions, workers, policies, logs, scheduling, recovery, and health/metrics endpoints through a PostgreSQL-backed API. :contentReference[oaicite:1]{index=1}
 
-The project is designed to act as a central scheduling and execution server for distributed worker nodes.
+## Features
 
----
-
-## Overview
-
-SparkFlow.Server manages the full lifecycle of execution across the system:
-
-- Registering and monitoring worker nodes
-- Assigning sessions to available workers
-- Starting, completing, and failing sessions
-- Managing accounts and flow definitions
-- Applying execution and scheduling policies
-- Recovering timed-out or interrupted sessions
-- Exposing logs and metrics for observability
-
----
+- Account management
+- Flow publishing and retrieval
+- Session lifecycle management
+- Worker registration, heartbeat, and session assignment
+- Policy storage and evaluation
+- Log ingestion
+- Background scheduling and recovery services
+- PostgreSQL persistence with EF Core migrations
+- Swagger/OpenAPI support
+- API key and worker authentication middleware
+- Health and metrics endpoints :contentReference[oaicite:2]{index=2}
 
 ## Architecture
 
-The project follows a layered architecture inspired by:
+The project is organized into clear layers:
 
-- Clean Architecture
-- Domain-Driven Design (DDD)
-- CQRS-style application features
+- **Api**  
+  Minimal API endpoints, middleware, background services, OpenAPI configuration, and request/response mapping.
 
-### Layers
+- **Application**  
+  Use cases, handlers, validators, scheduling logic, services, abstractions, and transaction boundaries.
 
-#### 1. API Layer
-Responsible for:
-- Exposing HTTP endpoints
-- Middleware pipeline
-- Request/response mapping
-- Authentication and request tracing
-- Swagger/OpenAPI configuration
+- **Domain**  
+  Core entities, value objects, enums, rules, and domain events.
 
-Main folders:
-- `src/Api/Endpoints`
-- `src/Api/Middleware`
-- `src/Api/OpenApi`
-- `src/Api/BackgroundServices`
+- **Infrastructure**  
+  Persistence, repositories, EF Core DbContext, unit of work, crypto, metrics, locking, configuration, and serialization.
 
-#### 2. Application Layer
-Responsible for:
-- Use cases and business workflows
-- Commands / Queries / Handlers
-- Validation behaviors
-- Metrics and logging behaviors
-- Scheduling and assignment services
+- **Contracts**  
+  DTOs and request/response contracts shared with clients such as workers. :contentReference[oaicite:3]{index=3}
 
-Main folders:
-- `src/Application/Features`
-- `src/Application/Services`
-- `src/Application/Pipelines`
-- `src/Application/Scheduling`
-
-#### 3. Domain Layer
-Responsible for:
-- Core business entities
-- Domain events
-- Rules and invariants
-- Value objects
-- Business enums and exceptions
-
-Main folders:
-- `src/Domain/Entities`
-- `src/Domain/Events`
-- `src/Domain/Rules`
-- `src/Domain/ValueObjects`
-
-#### 4. Infrastructure Layer
-Responsible for:
-- Persistence implementation
-- JSON storage
-- Metrics providers
-- Cryptography
-- Time and locking implementations
-- Dependency injection setup
-
-Main folders:
-- `src/Infrastructure/Persistence`
-- `src/Infrastructure/Metrics`
-- `src/Infrastructure/Crypto`
-- `src/Infrastructure/Configuration`
-
-#### 5. Contracts Layer
-Responsible for:
-- DTOs
-- API requests/responses
-- Shared transport contracts between client/workers and server
-
-Main folders:
-- `src/Contracts`
-
----
-
-## Architecture Diagram
+## Project Structure
 
 ```text
-                 +----------------------+
-                 |      Clients /       |
-                 |      Worker Nodes    |
-                 +----------+-----------+
-                            |
-                            v
-                 +----------------------+
-                 |      API Layer       |
-                 |  Endpoints/Middleware|
-                 +----------+-----------+
-                            |
-                            v
-                 +----------------------+
-                 |   Application Layer  |
-                 | Commands / Queries   |
-                 | Services / Handlers  |
-                 +----------+-----------+
-                            |
-                            v
-                 +----------------------+
-                 |     Domain Layer     |
-                 | Entities / Rules /   |
-                 | Events / ValueObjects|
-                 +----------+-----------+
-                            |
-                            v
-                 +----------------------+
-                 | Infrastructure Layer |
-                 | JSON Store / Metrics |
-                 | Crypto / Locking     |
-                 +----------------------+
+src/
+  Api/
+    BackgroundServices/
+    DependencyInjection/
+    Endpoints/
+    Mapping/
+    Middleware/
+    OpenApi/
+
+  Application/
+    Abstractions/
+    Features/
+    Pipelines/
+    Scheduling/
+    Services/
+
+  Contracts/
+    Accounts/
+    Bootstrap/
+    Common/
+    Flows/
+    Logs/
+    Sessions/
+    Workers/
+
+  Domain/
+    Common/
+    Entities/
+    Enums/
+    Events/
+    Rules/
+    ValueObjects/
+
+  Infrastructure/
+    Configuration/
+    Crypto/
+    DependencyInjection/
+    Locking/
+    Metrics/
+    Persistence/
+    Serialization/
+    Time/
