@@ -4,25 +4,35 @@ using SparkFlow.Server.Domain.Entities;
 
 namespace SparkFlow.Server.Infrastructure.Persistence.Repositories;
 
+/// <summary>
+/// Legacy JSON-backed repository for flow definitions.
+/// This remains as a fallback when PostgreSQL is not configured.
+/// </summary>
 public sealed class JsonFlowRepository : IFlowRepository
 {
     private readonly IHasher _hasher;
     private readonly ISigner _signer;
+
     private const string StorageFolder = "data/flows";
 
     public JsonFlowRepository(IHasher hasher, ISigner signer)
     {
         _hasher = hasher;
         _signer = signer;
+
         Directory.CreateDirectory(StorageFolder);
     }
 
     public FlowEnvelope? Get(string flowId)
     {
         var path = ResolvePath(flowId);
-        if (!File.Exists(path)) return null;
+        if (!File.Exists(path))
+        {
+            return null;
+        }
 
         var json = File.ReadAllText(path);
+
         return new FlowEnvelope
         {
             FlowId = flowId,
@@ -42,10 +52,16 @@ public sealed class JsonFlowRepository : IFlowRepository
     private static string ResolvePath(string flowId)
     {
         var dedicated = Path.Combine(StorageFolder, $"{flowId}.json");
-        if (File.Exists(dedicated)) return dedicated;
+        if (File.Exists(dedicated))
+        {
+            return dedicated;
+        }
 
         var rootFallback = Path.Combine(AppContext.BaseDirectory, "flow.json");
-        if (File.Exists(rootFallback)) return rootFallback;
+        if (File.Exists(rootFallback))
+        {
+            return rootFallback;
+        }
 
         return dedicated;
     }

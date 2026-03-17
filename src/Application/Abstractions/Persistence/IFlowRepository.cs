@@ -8,5 +8,6 @@ namespace SparkFlow.Server.Application.Abstractions.Persistence;
 public interface IFlowRepository
 {
     FlowEnvelope? Get(string flowId);
+
     void Save(string flowId, string json);
 }

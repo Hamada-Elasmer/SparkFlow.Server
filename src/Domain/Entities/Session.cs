@@ -19,7 +19,9 @@ public sealed class Session : AggregateRoot<SessionId>
     public string? Error { get; private set; }
     public int RetryCount { get; private set; }
 
-    public Session() { }
+    public Session()
+    {
+    }
 
     public Session(SessionId id, AccountId accountId, string flowId, int flowVersion)
     {

@@ -1,5 +1,3 @@
-using System;
-
 namespace SparkFlow.Server.Domain.Entities;
 
 /// <summary>
